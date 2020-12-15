@@ -11,6 +11,13 @@
     <hr />
     <div>
       <b-table striped hover :items="productos"></b-table>
+      <b-button class="ml-1" variant="success" v-on:click="isAdding = !isAdding"
+        >Agregar Producto</b-button
+      >
+    </div>
+    <div v-if="isAdding">
+      Acá quiero poner el formulario para agregar 1 producto. (cuando sepa como
+      jaja)
     </div>
   </div>
 </template>
@@ -20,7 +27,8 @@ export default {
   name: "Productos",
   data() {
     return {
-      productos: []
+      productos: [],
+      isAdding: false
     };
   },
   created() {
