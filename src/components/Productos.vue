@@ -97,11 +97,14 @@ export default {
   },
   methods: {
     getAllProducts() {
-      return axios.get("http://127.0.0.1:8000/productos");
+      return axios.get("https://sixginfo-rest-api.herokuapp.com/productos");
     },
     processForm() {
       axios
-        .post("http://127.0.0.1:8000/productos", this.nuevoProducto)
+        .post(
+          "https://sixginfo-rest-api.herokuapp.com/productos",
+          this.nuevoProducto
+        )
         .then(dbProduct => {
           this.productos = [...this.productos, dbProduct.data];
           this.isAdding = !this.isAdding;
