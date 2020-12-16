@@ -15,10 +15,59 @@
         >Agregar Producto</b-button
       >
     </div>
-    <div v-if="isAdding">
-      Acá quiero poner el formulario para agregar 1 producto. (cuando sepa como
-      jaja)
-    </div>
+    <b-form class="ml-1" v-if="isAdding" @submit.prevent="processForm">
+      <b-form-group label="Nombre:" label-for="nombre">
+        <b-form-input
+          id="nombre"
+          v-model="nuevoProducto.nombre"
+          type="text"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Descripción:" label-for="descripcion">
+        <b-form-input
+          id="descripcion"
+          v-model="nuevoProducto.descripcion"
+          type="text"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Cantidad:" label-for="cantidad">
+        <b-form-input
+          id="cantidad"
+          v-model="nuevoProducto.cantidad"
+          type="number"
+          min="0"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group label="Precio:" label-for="precio">
+        <b-form-input
+          id="precio"
+          v-model="nuevoProducto.precio"
+          type="number"
+          min="0"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <!-- <b-form-group label="Costo:" label-for="costo">
+        <b-form-input
+          id="costo"
+          v-model="nuevoProducto.costo"
+          type="number"
+          required
+        ></b-form-input>
+      </b-form-group> -->
+
+      <b-button type="submit" variant="primary">Enviar</b-button>
+    </b-form>
+    <b-card class="mt-3" header="Form Data Result">
+      <pre class="m-0">{{ nuevoProducto }}</pre>
+    </b-card>
   </div>
 </template>
 <script>
@@ -28,7 +77,14 @@ export default {
   data() {
     return {
       productos: [],
-      isAdding: false
+      isAdding: false,
+      nuevoProducto: {
+        nombre: "",
+        descripcion: "",
+        cantidad: 0,
+        precio: 0
+        // costo: 0,
+      }
     };
   },
   created() {
@@ -41,7 +97,19 @@ export default {
   },
   methods: {
     getAllProducts() {
-      return axios.get("http://127.0.0.1:8000/productos");
+      return axios.get("https://sixginfo-rest-api.herokuapp.com/productos");
+    },
+    processForm() {
+      axios
+        .post(
+          "https://sixginfo-rest-api.herokuapp.com/productos",
+          this.nuevoProducto
+        )
+        .then(dbProduct => {
+          this.productos = [...this.productos, dbProduct.data];
+          this.isAdding = !this.isAdding;
+        })
+        .catch(err => console.log(err.message));
     }
   }
 };
