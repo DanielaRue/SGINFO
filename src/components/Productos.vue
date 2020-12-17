@@ -88,24 +88,28 @@ export default {
     };
   },
   created() {
-    let self = this;
-    this.getAllProducts()
+    this.getAllProducts() // `this` inside lifecycle hooks points to the Vue instance
       .then(result => {
-        self.productos = result.data;
+        // there's no need to wrap 'this', we're using an arrow function
+        // which inherits its this from the lexical scope (the 'created' method scope)
+        this.productos = result.data;
       })
       .catch(error => alert("Error de Servidor"));
   },
   methods: {
     getAllProducts() {
+      console.log(this);
       return axios.get("https://sixginfo-rest-api.herokuapp.com/productos");
     },
     processForm() {
       axios
         .post(
           "https://sixginfo-rest-api.herokuapp.com/productos",
-          this.nuevoProducto
+          this.nuevoProducto // `this` inside a 'methods'(the object) method, points to the Vue instance
         )
         .then(dbProduct => {
+          // `this` inside arrow functions points to the enclosing lexical scope
+          // (i.e, the 'this' of processForm, which also points to ...the Vue instance)
           this.productos = [...this.productos, dbProduct.data];
           this.isAdding = !this.isAdding;
         })
