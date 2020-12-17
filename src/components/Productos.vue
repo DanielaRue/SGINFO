@@ -9,65 +9,86 @@
       </b-navbar>
     </div>
     <hr />
-    <div>
-      <b-table striped hover :items="productos"></b-table>
-      <b-button class="ml-1" variant="success" v-on:click="isAdding = !isAdding"
-        >Agregar Producto</b-button
-      >
+    <div class="d-flex flex-column align-items-center mb-3" v-if="isLoading">
+      <strong>Cargando Productos</strong>
+      <strong>Esperando respuesta del servidor... (Heroku)</strong>
+      <b-spinner label="Loading..."></b-spinner>
     </div>
-    <b-form class="ml-1" v-if="isAdding" @submit.prevent="processForm">
-      <b-form-group label="Nombre:" label-for="nombre">
-        <b-form-input
-          id="nombre"
-          v-model="nuevoProducto.nombre"
-          type="text"
-          required
-        ></b-form-input>
-      </b-form-group>
+    <div class="shadow-sm p-3 mb-5 m-3 bg-white rounded" v-if="!isLoading">
+      <div>
+        <b-table striped hover :items="productos"></b-table>
+        <b-button
+          pill
+          class="ubication mt-3"
+          variant="outline-success"
+          v-on:click="isAdding = !isAdding"
+        >
+          Agregar Producto
+        </b-button>
+      </div>
 
-      <b-form-group label="Descripción:" label-for="descripcion">
-        <b-form-input
-          id="descripcion"
-          v-model="nuevoProducto.descripcion"
-          type="text"
-          required
-        ></b-form-input>
-      </b-form-group>
+      <div class="shadow-sm p-2 mb-5 m-4 bg-white rounded form">
+        <b-form class="ml-2" v-if="isAdding" @submit.prevent="processForm">
+          <b-form-group label="Nombre" label-for="nombre">
+            <b-form-input
+              id="nombre"
+              placeholder="Nombre del producto"
+              v-model="nuevoProducto.nombre"
+              type="text"
+              required
+            ></b-form-input>
+          </b-form-group>
 
-      <b-form-group label="Cantidad:" label-for="cantidad">
-        <b-form-input
-          id="cantidad"
-          v-model="nuevoProducto.cantidad"
-          type="number"
-          min="0"
-          required
-        ></b-form-input>
-      </b-form-group>
+          <b-form-group label="Descripción" label-for="descripcion">
+            <b-form-input
+              id="descripcion"
+              placeholder="Descripción del producto"
+              v-model="nuevoProducto.descripcion"
+              type="text"
+              required
+            ></b-form-input>
+          </b-form-group>
 
-      <b-form-group label="Precio:" label-for="precio">
-        <b-form-input
-          id="precio"
-          v-model="nuevoProducto.precio"
-          type="number"
-          min="0"
-          required
-        ></b-form-input>
-      </b-form-group>
+          <b-form-group label="Cantidad" label-for="cantidad">
+            <b-form-input
+              id="cantidad"
+              v-model="nuevoProducto.cantidad"
+              type="number"
+              min="0"
+              required
+            ></b-form-input>
+          </b-form-group>
 
-      <!-- <b-form-group label="Costo:" label-for="costo">
-        <b-form-input
-          id="costo"
-          v-model="nuevoProducto.costo"
-          type="number"
-          required
-        ></b-form-input>
-      </b-form-group> -->
+          <b-form-group label="Precio" label-for="precio">
+            <b-form-input
+              id="precio"
+              v-model="nuevoProducto.precio"
+              type="number"
+              min="0"
+              required
+            ></b-form-input>
+          </b-form-group>
 
-      <b-button type="submit" variant="primary">Enviar</b-button>
-    </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ nuevoProducto }}</pre>
-    </b-card>
+          <!-- <b-form-group label="Costo:" label-for="costo">
+            <b-form-input
+              id="costo"
+              v-model="nuevoProducto.costo"
+              type="number"
+              required
+            ></b-form-input>
+          </b-form-group> -->
+
+          <b-button
+            pill
+            class="ubication_button mt-2"
+            type="submit"
+            variant="outline-primary"
+          >
+            Enviar
+          </b-button>
+        </b-form>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -77,6 +98,7 @@ export default {
   data() {
     return {
       productos: [],
+      isLoading: true,
       isAdding: false,
       nuevoProducto: {
         nombre: "",
@@ -93,6 +115,7 @@ export default {
         // there's no need to wrap 'this', we're using an arrow function
         // which inherits its this from the lexical scope (the 'created' method scope)
         this.productos = result.data;
+        this.isLoading = false;
       })
       .catch(error => alert("Error de Servidor"));
   },
@@ -118,4 +141,13 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.ubication {
+  margin-left: 900px;
+  width: 180px;
+}
+.ubication_button {
+  margin-left: 900px;
+  width: 100px;
+}
+</style>
